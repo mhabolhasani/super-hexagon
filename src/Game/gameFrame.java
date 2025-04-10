@@ -18,7 +18,7 @@ public class gameFrame extends JFrame {
 
 class GamePanel extends JPanel implements KeyListener {
     public double Angle = 0;
-    private Graphics2D g;
+    private Graphics2D graphics2D;
     private int centerX;
     private int centerY;
     private double angleOfMahlar = 0 ;
@@ -31,6 +31,7 @@ class GamePanel extends JPanel implements KeyListener {
     public GamePanel() {
         this.Speed = 0.2;
         this.state = false;
+        this.isStopped = false;
 
         this.setLayout(null);
 
@@ -56,22 +57,19 @@ class GamePanel extends JPanel implements KeyListener {
         new ColorChange(this);
 
         Timer timer = new Timer(16, e -> {
-            this.Angle += 0.15;
-            repaint();
-            this.state = Collision.checkCollision(
-                    this.mahlar,
-                    this.pattern.obsPattern.mainPattern ,
-                    this.centerX ,
-                    this.centerY
-            );
-            if(this.state == true){
-                System.out.print("fucked");
-                ((Timer) e.getSource()).stop();
-                //new GameOver();
+            if(!this.isStopped) {
+                this.Angle += 0.15;
+                repaint();
             }
         });
         timer.start();
     };
+
+    public void setGraphics2D(Graphics2D graphics2D) {
+        if(this.graphics2D != null) {
+            this.graphics2D = graphics2D;
+        }
+    }
 
     private int[] getXHexagon(int centerX, int centerY) {
         int[] xPoints = new int[6];
@@ -103,20 +101,29 @@ class GamePanel extends JPanel implements KeyListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2D = (Graphics2D) g;
-        if (this.g == null) {
-            this.g = g2D;
+        if(!this.isStopped) {
+            Graphics2D g2D = (Graphics2D) g;
+            setGraphics2D(g2D);
+            super.paintComponent(g);
+            int centerX = getWidth() / 2;
+            int centerY = getHeight() / 2;
+            int[] xPoints = getXHexagon(centerX, centerY);
+            int[] yPoints = getYHexagon(centerX, centerY);
+            g2D.drawPolygon(xPoints, yPoints, 6);
+            paintLines(g, xPoints, yPoints, centerX, centerY);
+            this.pattern = new patternManger(g2D, this.Angle, centerX, centerY);
+            this.mahlar = new Mahlar(this.angleOfMahlar + this.Angle);
+            this.mahlar.drawMahlar(g2D, centerX, centerY);
+            this.state = Collision.col(
+                    this.mahlar,
+                    this.pattern.obsPattern.mainPattern,
+                    this.centerX,
+                    this.centerY
+            );
+            if(this.state){
+                this.setVisible(false);
+            }
         }
-        super.paintComponent(g);
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
-        int[] xPoints = getXHexagon(centerX, centerY);
-        int[] yPoints = getYHexagon(centerX, centerY);
-        g2D.drawPolygon(xPoints, yPoints, 6);
-        paintLines(g, xPoints, yPoints, centerX, centerY);
-        this.pattern = new patternManger(g2D , this.Angle , centerX , centerY);
-        this.mahlar = new Mahlar(this.angleOfMahlar + this.Angle);
-        this.mahlar.drawMahlar(g2D,centerX, centerY);
     }
 
     @Override
@@ -124,13 +131,18 @@ class GamePanel extends JPanel implements KeyListener {
         switch (keyEvent.getKeyChar()) {
             case 'a' :
                 this.angleOfMahlar -= Math.PI / 3;
-                this.mahlar.setAngle(this.mahlar.getAngle() - Math.PI / 3);
                 break;
             case 'd' :
                 this.angleOfMahlar += Math.PI / 3;
-                this.mahlar.setAngle(this.mahlar.getAngle() + Math.PI / 3);
                 break;
-            case KeyEvent.VK_SPACE :
+            case 'c' :
+                this.isStopped = true;
+                this.stoppedPanel(true);
+                break;
+            case 'v' :
+                this.isStopped = false;
+                this.stoppedPanel(false);
+                break;
         }
         this.repaint();
     }
@@ -138,6 +150,44 @@ class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyReleased(KeyEvent keyEvent) {
 
+    }
+
+    public void stoppedPanel(boolean state) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        panel.setBounds(this.getWidth() / 2 - 150, this.getHeight() / 2 - 50, 300, 100);
+        panel.setBackground(Color.DARK_GRAY);
+
+        JButton backToMenu = new JButton("BACK TO MENU");
+        JButton continueGame = new JButton("CONTINUE");
+
+        backToMenu.setFocusable(false);
+        continueGame.setFocusable(false);
+
+        // استایل ساده
+        backToMenu.setForeground(Color.WHITE);
+        backToMenu.setBackground(Color.RED);
+
+        continueGame.setForeground(Color.WHITE);
+        continueGame.setBackground(Color.GREEN);
+
+        backToMenu.addActionListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.dispose();
+            new Menu();
+        });
+
+        continueGame.addActionListener(e -> {
+            panel.setVisible(false);
+            isStopped = false;
+        });
+
+        panel.add(continueGame);
+        panel.add(backToMenu);
+        this.add(panel);
+        this.setComponentZOrder(panel, 0);
+
+        panel.setVisible(state);
     }
 
 /*
