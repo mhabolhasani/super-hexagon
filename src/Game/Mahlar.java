@@ -27,8 +27,9 @@ public class Mahlar {
         return yTopPoint;
     }
 
-    public int[] getXcoordinates(double theta, int centerX) {
+    public int[] getXcoordinates(double theta) {
         int[] x = new int[3];
+        int centerX = GamePanel.getCenterX();
         x[0] = (int) (centerX + 50 * Math.cos(theta + Math.PI / 6 - 0.15));
         x[1] = (int) (centerX + 50 * Math.cos(theta + Math.PI / 6 + 0.15));
         x[2] = (int) (centerX + 60 * Math.cos(theta + Math.PI / 6));
@@ -36,7 +37,8 @@ public class Mahlar {
         return x;
     }
 
-    public int[] getYcoordinates(double theta, int centerY) {
+    public int[] getYcoordinates(double theta) {
+        int centerY = GamePanel.getCenterY();
         int[] y = new int[3];
         y[0] = (int) (centerY + 50 * Math.sin(theta + Math.PI / 6 - 0.150));
         y[1] = (int) (centerY + 50 * Math.sin(theta + Math.PI / 6  + 0.15));
@@ -46,9 +48,9 @@ public class Mahlar {
     }
 
 
-    public void drawMahlar(Graphics2D g ,int centerX,int centerY){
-        int[] xCoordinates = getXcoordinates(this.Angle ,centerX);
-        int[] yCoordinates = getYcoordinates(this.Angle ,centerY);
+    public void drawMahlar(Graphics2D g){
+        int[] xCoordinates = getXcoordinates(this.Angle);
+        int[] yCoordinates = getYcoordinates(this.Angle);
         g.fillPolygon(xCoordinates , yCoordinates , 3);
     }
 }

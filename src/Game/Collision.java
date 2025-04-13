@@ -16,8 +16,8 @@ public class Collision {
 
                     }
                 }
-                int[] xPoints = obs.getxDimension(centerX);
-                int[] yPoints = obs.getyDimension(centerY);
+                int[] xPoints = obs.getxDimension();
+                int[] yPoints = obs.getyDimension();
                 if (xPoints[3] == xPoints[0]) {
                     if (Math.abs(xPoints[1] - mahlar.getyTopPoint()) <= 1) {
                         System.out.println(mahlar.getxTopPoint());

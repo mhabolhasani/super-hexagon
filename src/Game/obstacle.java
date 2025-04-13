@@ -39,8 +39,9 @@ public class obstacle {
         this.distanseFromCenter = distanseFromCenter;
     }
 
-    public int[] getxDimension(int centerX){
+    public int[] getxDimension() {
         int[] xCoordinates = new int[4];
+        int centerX = GamePanel.getCenterX();
         xCoordinates[0] = (int)( centerX + (this.distanseFromCenter * Math.cos(this.angle)));
         xCoordinates[1] = (int)( centerX + ((this.distanseFromCenter + this.thinkness) * Math.cos(this.angle)));
         xCoordinates[3] = (int)( centerX + (this.distanseFromCenter * Math.cos(this.angle + (Math.PI / 3))));
@@ -48,8 +49,9 @@ public class obstacle {
         return xCoordinates;
     }
 
-    public int[] getyDimension(int centerY){
+    public int[] getyDimension(){
         int[] yCoordinates = new int[4];
+        int centerY = GamePanel.getCenterY();
         yCoordinates[0] = (int) (centerY + (distanseFromCenter * Math.sin(angle)));
         yCoordinates[1] = (int) (centerY + ((distanseFromCenter + thinkness) * Math.sin(angle)));
         yCoordinates[3] = (int) (centerY + (distanseFromCenter * Math.sin(angle + (Math.PI / 3))));
@@ -57,11 +59,11 @@ public class obstacle {
         return yCoordinates;
     }
 
-    public void draw(Graphics g , int centerX , int centerY){
+    public void draw(Graphics g ){
         if(!this.isFinished) {
             Graphics2D g2D = (Graphics2D) g;
-            int[] xCoordinates = getxDimension(centerX);
-            int[] yCoordinates = getyDimension(centerY);
+            int[] xCoordinates = getxDimension();
+            int[] yCoordinates = getyDimension();
             g.setColor(Color.BLACK);
             g.fillPolygon(xCoordinates, yCoordinates, 4);
             this.update();
@@ -69,7 +71,7 @@ public class obstacle {
     }
 
     public void update(){
-        this.distanseFromCenter -= 5;
+        this.distanseFromCenter -= GamePanel.getSpeed();
         if(this.distanseFromCenter <= 50){
             this.isFinished = true;
         }

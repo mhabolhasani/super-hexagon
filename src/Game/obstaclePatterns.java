@@ -13,7 +13,6 @@ public class obstaclePatterns {
     private Random random = new Random();
     private double initialAngle;
     protected boolean isFinished;
-    private int type;
 
     public void setInitialAngle(double initialAngle) {
         this.initialAngle = initialAngle;
@@ -84,12 +83,12 @@ public class obstaclePatterns {
         }
     }
 
-    public void drawObstacles(Graphics2D g2D, double Angle, int centerX , int centerY) {
+    public void drawObstacles(Graphics2D g2D, double Angle) {
         this.initialAngle = Angle;
         updateObstacles();
         if (!this.isFinished){
             for (obstacle Obs : mainPattern) {
-                Obs.draw(g2D, centerX, centerY);
+                Obs.draw(g2D);
             }
             this.updateFinished(mainPattern);
         }
