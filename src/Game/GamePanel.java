@@ -169,7 +169,7 @@ class GamePanel extends JPanel implements KeyListener {
             this.pattern = new patternManger(g2D, this.angle);
             this.mahlar = new Mahlar(this.relativeAngleOfMahlar + this.angle);
             this.mahlar.drawMahlar(g2D);
-            this.state = Collision.col(
+            this.state = Collision.checkCollision(
                     this.mahlar,
                     this.pattern.patternList.get(0).mainPattern,
                     this.centerX,
