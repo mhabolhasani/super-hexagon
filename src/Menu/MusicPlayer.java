@@ -15,7 +15,7 @@ public class MusicPlayer {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
                 clip = AudioSystem.getClip();
                 clip.open(audioStream);
-                if (Setting.isMuted() && clip.isRunning()) {
+                if (!isPlaying()) {
                     clip.start();
                     MusicPlayer.isRunning = true;
                 }
@@ -26,11 +26,19 @@ public class MusicPlayer {
     }
 
     public static void MuteSong(){
-        clip.stop();
+        if(isPlaying()) {
+            clip.stop();
+        }
     }
 
     public static void continuePlaying(){
-        clip.start();
+        if(!isPlaying()) {
+            clip.start();
+        }
+    }
+
+    public static boolean isPlaying() {
+        return MusicPlayer.clip != null && MusicPlayer.clip.isRunning();
     }
 
 }

@@ -12,22 +12,34 @@ public class Setting extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(new Color(30, 30, 30));
         this.setBorder(BorderFactory.createEmptyBorder(60, 200, 60, 200));
+        String initialTextMusic;
 
-        JToggleButton muteButton = createToggleButton("Sound On");
+        if(Setting.muted == true){
+            initialTextMusic = "Sound On";
+        }else{
+            initialTextMusic = "Sound Off";
+        }
+
+        JToggleButton muteButton = createToggleButton(initialTextMusic);
         muteButton.addActionListener(e -> {
             Setting.muted = muteButton.isSelected();
-            muteButton.setText(muted ? "Sound Off" : "Sound On");
-            if (!muted) {
+            muteButton.setText(muted ? "Sound On" : "Sound Off");
+            if (muted) {
                 MusicPlayer.MuteSong();
             } else {
                 MusicPlayer.continuePlaying();
             }
         });
-
-        JToggleButton saveButton = createToggleButton("Save Off");
+        String initialTextSaveable;
+        if(Setting.saveable != null && Setting.saveable == true){
+            initialTextSaveable = "Save Off";
+        }else{
+            initialTextSaveable = "Save On";
+        }
+        JToggleButton saveButton = createToggleButton(initialTextSaveable);
         saveButton.addActionListener(e -> {
             Setting.saveable = saveButton.isSelected();
-            saveButton.setText(saveable ? "Save On" : "Save Off");
+            saveButton.setText(saveable ? "Save Off" : "Save On");
         });
 
         JButton backButton = createStyledButton("Back to Menu");

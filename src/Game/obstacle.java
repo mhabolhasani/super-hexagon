@@ -59,19 +59,19 @@ public class obstacle {
         return yCoordinates;
     }
 
-    public void draw(Graphics g ){
+    public void draw(Graphics g ,float speed){
         if(!this.isFinished) {
             Graphics2D g2D = (Graphics2D) g;
             int[] xCoordinates = getxDimension();
             int[] yCoordinates = getyDimension();
             g.setColor(Color.BLACK);
             g.fillPolygon(xCoordinates, yCoordinates, 4);
-            this.update();
+            this.update(speed);
         }
     }
 
-    public void update(){
-        this.distanseFromCenter -= GamePanel.getSpeed();
+    public void update(float speed){
+        this.distanseFromCenter -= speed;
         if(this.distanseFromCenter <= 50){
             this.isFinished = true;
         }

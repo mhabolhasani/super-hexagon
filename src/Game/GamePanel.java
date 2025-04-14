@@ -24,7 +24,6 @@ class GamePanel extends JPanel implements KeyListener {
     private gameFrame frame;
     private User user;
     private float elapsedTime;
-    private static int speed = 5;
 
     public GamePanel(User user , gameFrame frame) {
         this.removeAll();
@@ -64,7 +63,6 @@ class GamePanel extends JPanel implements KeyListener {
             if (!this.isStopped) {
                 this.angle += 0.05;
                 this.elapsedTime += 16;
-                this.speed += 0.5;
                 time.setText("Time : " + this.elapsedTime / 1000);
                 repaint();
             }
@@ -78,10 +76,6 @@ class GamePanel extends JPanel implements KeyListener {
 
     public static int getCenterY() {
         return centerY;
-    }
-
-    public static int getSpeed() {
-        return speed;
     }
 
     public void setGraphics2D(Graphics2D graphics2D) {
@@ -115,6 +109,7 @@ class GamePanel extends JPanel implements KeyListener {
                 if(Setting.isSaveable()) {
                     this.saveToFile();
                 }
+                this.pattern.update();
                 this.frame.dispose();
                 new menu();
             });
@@ -255,7 +250,7 @@ class GamePanel extends JPanel implements KeyListener {
                 this.frame.removeAll();
                 this.frame.revalidate();
                 this.frame.dispose();
-                patternManger.patternList = new ArrayList<>();
+                this.pattern.update();
                 new gameFrame(this.user);
             });
 
@@ -263,6 +258,7 @@ class GamePanel extends JPanel implements KeyListener {
                 if(Setting.isSaveable()) {
                     saveToFile();
                 }
+                this.pattern.update();
                 this.setVisible(false);
                 this.frame.dispose();
                 new menu();
@@ -278,10 +274,11 @@ class GamePanel extends JPanel implements KeyListener {
             this.revalidate();
             this.repaint();
             gameOverPanel.setVisible(true);
-            patternManger.patternList = new ArrayList<>();
+            this.pattern.update();
         }else{
             this.gameOverPanel.setVisible(true);
             this.revalidate();
+            this.pattern.update();
         }
     }
 
