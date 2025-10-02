@@ -1,4 +1,4 @@
-# SuperNHexagon
+# SuperHexagon
 
 A simple **Super Hexagon** game built using **Java** and **Swing**.
 
